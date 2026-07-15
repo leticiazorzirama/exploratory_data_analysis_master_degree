@@ -49,12 +49,19 @@ library(VIM)
 library(naniar)
 library(tidyverse)
 library(ggplot2)
+library(dplyr)
+library(readr)
+library(purrr)
+library(tibble)
+library(stringr)
+library(forcats)
+library(lubridate)
 library(patchwork)
+library(tidyr)
 library(broom)
 
 cat("\n✅  Todos os pacotes carregados com sucesso!\n")
 cat("   R versão:", R.version$version.string, "\n\n")
-
 
 ## =======================================================================
 ## MÓDULO 1 — O QUE SÃO DADOS AUSENTES?
