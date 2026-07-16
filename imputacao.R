@@ -47,7 +47,6 @@ invisible(lapply(pacotes_necessarios, instalar_se_necessario))
 library(mice)
 library(VIM)
 library(naniar)
-library(tidyverse)
 library(ggplot2)
 library(dplyr)
 library(readr)
@@ -136,10 +135,18 @@ cat("Primeiras linhas:\n")
 print(head(pacientes, 8))
 cat("\nDimensões:", nrow(pacientes), "linhas ×", ncol(pacientes), "colunas\n\n")
 
-## ✏  EXERCÍCIO 1.1
+## →  EXERCÍCIO 1.1
 ## Quantas células no total existem neste dataset?
+celulas_total <- nrow(pacientes)*ncol(pacientes)
+cat("Células no total neste dataset: ", celulas_total)
+
 ## Quantas contêm NA?
+celulas_na <- sum(is.na(pacientes))
+cat("Células contendo NA: ", celulas_na)
+
 ## Qual a porcentagem geral de ausências?
+cat("Porcentagem geral de ausências:", round(((celulas_na/celulas_total) * 100), 2), "%")
+
 ## → Tente calcular antes de rodar a linha abaixo!
 
 total_celulas  <- prod(dim(pacientes))
@@ -238,9 +245,16 @@ cat(n_casos_incompletos, "de", n, "casos têm ao menos 1 NA (",
 
 # 💬  DISCUSSÃO:
 # 1. Olhando vis_miss com cluster = TRUE, você consegue identificar padrões?
-# 2. Alguma variável parece "sistematicamente" ausente junto com outra?
-# 3. Isso sugere MCAR, MAR ou MNAR?
+# Sim. 
+# A variável peso_kg tem ausências predominantemente agrupadas no começo e no final das observações.
+# A variável colesterol tem ausências agrupadas ao final das observações.
+# A varivel glicose têm ausências agrupadas em um intervalo específico de observações.
 
+# 2. Alguma variável parece "sistematicamente" ausente junto com outra?
+# O grupo de NAs para glicose tem uma sobreposição com o grupo de NAs para colesterol. 
+
+# 3. Isso sugere MCAR, MAR ou MNAR?
+# MAR
 
 # =============================================================================
 # ███  MÓDULO 3 — MECANISMOS DE AUSÊNCIA (TEORIA + TESTE)
@@ -276,6 +290,9 @@ if (resultado_little$p.value < 0.05) {
   cat("   → Dados são consistentes com MCAR\n")
   cat("   → Imputação simples é razoável\n")
 }
+
+# OBSERVAÇÃO
+# Essa conclusão é para o dataset inteiro.
 
 # ─────────────────────────────────────────────────────────────────────────────
 # 3.2  Investigando MAR visualmente
@@ -332,7 +349,10 @@ cat("Diferença de médias:",
 
 # 💬  DISCUSSÃO:
 # A diferença de altura entre grupos é estatisticamente significativa?
+# Sim. O p-valor sugere que H0 deve ser rejeitado em favor de H1.
+
 # O que isso confirma sobre o mecanismo de ausência do peso_kg?
+# O mecanismo de ausência do peso_kg é MAR, ou seja, depende de uma segunda variável, no caso a altura. 
 
 # =============================================================================
 # ███  MÓDULO 4 — IMPUTAÇÃO SIMPLES (MÉDIA, MEDIANA, MODA)
